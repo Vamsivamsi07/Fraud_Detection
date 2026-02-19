@@ -1,0 +1,37 @@
+2026-02-10 11:28:43,578 - INFO - \u2713 Model files loaded successfully
+2026-02-10 11:28:43,625 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-02-10 11:28:43,625 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-10 11:28:43,628 - INFO -  * Restarting with stat
+2026-02-10 11:28:45,595 - INFO - \u2713 Model files loaded successfully
+2026-02-10 11:28:45,600 - WARNING -  * Debugger is active!
+2026-02-10 11:28:45,600 - INFO -  * Debugger PIN: 560-098-135
+2026-02-10 11:29:57,433 - INFO - \u2713 Model files loaded successfully
+2026-02-10 11:29:57,471 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-02-10 11:29:57,471 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-10 11:29:57,471 - INFO -  * Restarting with stat
+2026-02-10 11:29:59,067 - INFO - \u2713 Model files loaded successfully
+2026-02-10 11:29:59,082 - WARNING -  * Debugger is active!
+2026-02-10 11:29:59,090 - INFO -  * Debugger PIN: 560-098-135
+2026-02-10 11:31:18,523 - INFO - \u2713 Model files loaded successfully
+2026-02-10 11:31:18,551 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-02-10 11:31:18,551 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-10 11:31:18,553 - INFO -  * Restarting with stat
+2026-02-10 11:31:20,288 - INFO - \u2713 Model files loaded successfully
+2026-02-10 11:31:20,302 - WARNING -  * Debugger is active!
+2026-02-10 11:31:20,312 - INFO -  * Debugger PIN: 560-098-135
+2026-02-10 11:31:57,200 - INFO - 127.0.0.1 - - [10/Feb/2026 11:31:57] "GET /?id=cbe8042b-a36d-4d24-a21d-f676ebffe772&vscodeBrowserReqId=1770703316876 HTTP/1.1" 200 -
+2026-02-10 11:31:59,619 - INFO - 127.0.0.1 - - [10/Feb/2026 11:31:59] "GET /predict HTTP/1.1" 200 -
+2026-02-10 11:32:22,619 - INFO - \u2713 Model files loaded successfully
+2026-02-10 11:32:22,656 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-02-10 11:32:22,656 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-10 11:32:22,658 - INFO -  * Restarting with stat
+2026-02-10 11:32:24,492 - INFO - \u2713 Model files loaded successfully
+2026-02-10 11:32:24,501 - WARNING -  * Debugger is active!
+2026-02-10 11:32:24,510 - INFO -  * Debugger PIN: 560-098-135
+2026-02-10 11:32:31,474 - INFO - 127.0.0.1 - - [10/Feb/2026 11:32:31] "GET / HTTP/1.1" 200 -
+2026-02-10 11:32:31,605 - INFO - 127.0.0.1 - - [10/Feb/2026 11:32:31] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-02-10 11:32:33,130 - INFO - 127.0.0.1 - - [10/Feb/2026 11:32:33] "GET /predict HTTP/1.1" 200 -

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fraud Detection Predictor</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+.navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 60px; background: rgba(0,0,0,0.1); }
+.navbar a { padding: 10px 20px; background: rgba(255,255,255,0.2); color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold; transition: 0.3s; }
+.navbar a:hover { background: rgba(255,255,255,0.3); }
+.container { padding: 40px 60px; max-width: 550px; margin: 0 auto; }
+.form-card { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+.form-card h1 { color: #333; margin-bottom: 10px; font-size: 28px; }
+.form-card > p { color: #666; margin-bottom: 30px; font-size: 14px; }
+.form-group { margin-bottom: 20px; }
+label { font-weight: 600; display: block; margin-bottom: 8px; color: #333; font-size: 14px; }
+input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-family: inherit; font-size: 14px; transition: 0.3s; }
+input:focus, select:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+button { margin-top: 30px; padding: 14px; width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; border: none; border-radius: 5px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; position: relative; }
+button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4); }
+button:disabled { opacity: 0.7; cursor: not-allowed; }
+.spinner { display: inline-block; width: 16px; height: 16px; margin-right: 8px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 0.8s linear infinite; vertical-align: middle; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.hint { font-size: 12px; color: #999; margin-top: 4px; }
+.error-message { color: #ff4757; font-size: 12px; margin-top: 8px; display: none; }
+.error-message.show { display: block; }
+.form-group.error input, .form-group.error select { border-color: #ff4757; }
+</style>
+</head>
+<body>
+<nav class="navbar">
+<h2 style="color: white; font-size: 24px;">🛡️ Fraud Detection</h2>
+<div>
+<a href="/">Home</a>
+<a href="/predict">Predict</a>
+</div>
+</nav>
+<div class="container">
+<div class="form-card">
+<h1>Transaction Analysis</h1>
+<p>Enter transaction details to check for potential fraud</p>
+<form action="/submit" method="POST" onsubmit="return validateForm(event)">
+<div class="form-group">
+<label>Step</label>
+<input type="number" name="step" placeholder="e.g., 1" min="0" required>
+<div class="hint">Transaction step number in the sequence</div>
+<div class="error-message"></div>
+</div>
+<div class="form-group">
+<label>Transaction Type</label>
+<select name="type" required>
+<option value="">-- Select Type --</option>
+<option>PAYMENT</option>
+<option>TRANSFER</option>
+<option>CASH_OUT</option>
+<option>DEBIT</option>
+</select>
+<div class="hint">Choose the type of transaction</div>
+<div class="error-message"></div>
+</div>
+<div class="form-group">
+<label>Amount</label>
+<input type="number" name="amount" placeholder="e.g., 1000.50" step="any" min="0" required>
+<div class="hint">Transaction amount in currency</div>
+<div class="error-message"></div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Old Balance (Origin)</label>
+<input type="number" name="oldbalanceOrg" placeholder="e.g., 5000" step="any" min="0" required>
+<div class="error-message"></div>
+</div>
+<div class="form-group">
+<label>New Balance (Origin)</label>
+<input type="number" name="newbalanceOrig" placeholder="e.g., 4000" step="any" min="0" required>
+<div class="error-message"></div>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Old Balance (Destination)</label>
+<input type="number" name="oldbalanceDest" placeholder="e.g., 2000" step="any" min="0" required>
+<div class="error-message"></div>
+</div>
+<div class="form-group">
+<label>New Balance (Destination)</label>
+<input type="number" name="newbalanceDest" placeholder="e.g., 3000" step="any" min="0" required>
+<div class="error-message"></div>
+</div>
+</div>
+<button type="submit" id="submitBtn"><span class="spinner" style="display:none;"></span><span class="btn-text">🔍 Analyze Transaction</span></button>
+</form>
+</div>
+</div>
+<script>
+function clearErrors() {
+  document.querySelectorAll('.form-group').forEach(group => {
+    group.classList.remove('error');
+    group.querySelector('.error-message').classList.remove('show');
+  });
+}
+
+function showError(name, message) {
+  const group = document.querySelector(`input[name="${name}"], select[name="${name}"]`).closest('.form-group');
+  group.classList.add('error');
+  group.querySelector('.error-message').textContent = message;
+  group.querySelector('.error-message').classList.add('show');
+}
+
+function validateForm(event) {
+  clearErrors();
+  let isValid = true;
+
+  const step = parseFloat(document.querySelector('input[name="step"]').value);
+  const type = document.querySelector('select[name="type"]').value;
+  const amount = parseFloat(document.querySelector('input[name="amount"]').value);
+  const oldOrg = parseFloat(document.querySelector('input[name="oldbalanceOrg"]').value);
+  const newOrg = parseFloat(document.querySelector('input[name="newbalanceOrig"]').value);
+  const oldDest = parseFloat(document.querySelector('input[name="oldbalanceDest"]').value);
+  const newDest = parseFloat(document.querySelector('input[name="newbalanceDest"]').value);
+
+  // Validate step
+  if (step < 0) {
+    showError('step', 'Step must be non-negative');
+    isValid = false;
+  }
+  if (step > 1000000) {
+    showError('step', 'Step value seems unreasonably large');
+    isValid = false;
+  }
+
+  // Validate type
+  if (!type) {
+    showError('type', 'Please select a transaction type');
+    isValid = false;
+  }
+
+  // Validate amount
+  if (amount < 0) {
+    showError('amount', 'Amount cannot be negative');
+    isValid = false;
+  }
+  if (amount > 10000000) {
+    showError('amount', 'Amount seems unreasonably large');
+    isValid = false;
+  }
+
+  // Validate balances
+  if (oldOrg < 0 || newOrg < 0 || oldDest < 0 || newDest < 0) {
+    if (oldOrg < 0) showError('oldbalanceOrg', 'Balance cannot be negative');
+    if (newOrg < 0) showError('newbalanceOrig', 'Balance cannot be negative');
+    if (oldDest < 0) showError('oldbalanceDest', 'Balance cannot be negative');
+    if (newDest < 0) showError('newbalanceDest', 'Balance cannot be negative');
+    isValid = false;
+  }
+
+  // Warn about balance mismatch
+  const balanceChange = Math.abs(oldOrg - newOrg);
+  if (Math.abs(balanceChange - amount) > 0.01 && balanceChange > 0) {
+    if (!confirm('⚠️ Amount does not match balance change. Continue anyway?')) {
+      isValid = false;
+    }
+  }
+
+  if (isValid) {
+    // Show loading state
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.querySelector('.spinner').style.display = 'inline-block';
+    btn.querySelector('.btn-text').textContent = 'Analyzing...';
+  }
+
+  return isValid;
+}
+</script>
+</body>
+</html>
